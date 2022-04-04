@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+    Card images by: https://pixabay.com/users/clker-free-vector-images-3736/
+-->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Final Project - Poker</title>
+        <link href="css/poker.css" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <main class="grid-container">
+            <header class="top">
+                <h1>Poker</h1>
+            </header>
+            <nav class="menu">                
+                <ul>
+                    <li><a href='../finalProject.html'>Home</a></li>
+                    <li><a href='../blackjack/index.html'>Blackjack</a></li>
+                    <li><a href='index.html'>Poker</a></li>
+                    <li><a href='../slots/index.html'>Slots</a></li>
+                </ul>                
+            </nav>
+            <article class="middle">
+                <div id="table">
+                    <div id="community">
+                        <img id="flop1" src="media/cardback.png" width="47" height="64"/>
+                        <img id="flop2" src="media/cardback.png" width="47" height="64"/>
+                        <img id="flop3" src="media/cardback.png" width="47" height="64"/>
+                        <img id="turn" src="media/cardback.png" width="47" height="64"/>
+                        <img id="river" src="media/cardback.png" width="47" height="64"/>
+                    </div>
+                    <div id="playerHand">
+                        <img id="playerHand1" src="media/cardback.png" width="47" height="64"/>
+                        <img id="playerHand2" src="media/cardback.png" width="47" height="64"/>
+                    </div>
+                    <div id="compHand1">
+                        <img id="compHand1Card1" src="media/cardback.png" width="47" height="64"/>
+                        <img id="compHand1Card2" src="media/cardback.png" width="47" height="64"/>
+                    </div>  
+                    <div id="compHand2">
+                        <img id="compHand2Card1" src="media/cardback.png" width="47" height="64"/>
+                        <img id="compHand2Card2" src="media/cardback.png" width="47" height="64"/>
+                    </div>
+                    <div id="compHand3">
+                        <img id="compHand3Card1" src="media/cardback.png" width="47" height="64"/>
+                        <img id="compHand3Card2" src="media/cardback.png" width="47" height="64"/>
+                    </div>                 
+                </div>
+                <div>
+                    <input id="buttonNew" type="button" value="New Game">
+                    <input id="buttonDeal" type="button" value="Next Card">
+                    <input id="buttonFold" type="button" value="Fold">
+                </div>
+                <div id="msg"></div>
+                <div id="sort"></div>      
+            </article>
+            <footer class="bottom">
+                <small>&copy; Michael McLaughlin 2022.  - <a href='readme.txt'>Read me</a><br> 
+                    No part of this site may be reproduced in whole or in part in any manner without the permission of the copyright owner.</small>                
+            </footer>
+        </main>
+        <script src="js/poker.js"></script>
+    </body>
+</html>
