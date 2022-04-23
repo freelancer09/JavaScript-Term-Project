@@ -7,6 +7,8 @@ $(function() {
     maxCardWidth = 94;
     maxCardHeight = 128;
 
+    bgMusic = false;
+
     // Functions responsible for handling the deck
 
     function newDeck() {
@@ -61,6 +63,8 @@ $(function() {
         shuffleDeck();
         dealHand();
         gamePhase = 1;
+        $('#msg').html("")
+        $('#buttonDeal').css("display","inline")
         drawTable();
     }
     function playerDeal() {
@@ -70,12 +74,16 @@ $(function() {
             drawTable();
         }
     }
-    function playerFold() {
-        // Player ends game
-        gamePhase = 5;        
-        drawTable();
+    function playerMute() {
+        if (bgMusic) {
+            document.getElementById("bgMusic").pause();
+            bgMusic = false;
+        }
+        else {
+            document.getElementById("bgMusic").play();
+            bgMusic = true;
+        }
     }
-
     function calcScore(hand) {
         // Returns hand ranking and high card, higher wins
         // 9 - Straight Flush
@@ -104,8 +112,9 @@ $(function() {
             if (scoredHand[i].number > scoreHigh) scoreHigh = scoredHand[i].number;
         }
         countThree = 0;
-        countTwo = 0;
+        countTwo = 0;        
         highTwo = 0;
+        highsecondTwo = 0;
         highThree = 0;
         for (i=2;i<freqArr.length;i++) {
             // Four of a kind
@@ -114,7 +123,9 @@ $(function() {
                     score = 8;
                     scoreHigh = i;
                 }
-                else if (score == 8 && i > scoreHigh) scoreHigh = i;
+                else if (score == 8 && i > scoreHigh) {
+                    scoreHigh = i;
+                }
             }
             // Three of a kind
             else if (freqArr[i] == 3) {
@@ -125,16 +136,28 @@ $(function() {
                     highThree = i;
                 }
                 else if (score == 4 && i > scoreHigh) { scoreHigh = i; highThree = i; }
+
+                // Full house
+                if (countTwo > 0 && countThree > 0 && score < 7) {
+                    score = 7;
+                    if (countThree > countTwo) scoreHigh = countThree;
+                    else scoreHigh = countTwo;                
+                }
+                if (countThree > 1 && score < 7) {
+                    score = 7;
+                    scoreHigh = highThree;                
+                }
             }
             // One Pair
-            else if (freqArr[i] == 2) {
+            else if (freqArr[i] == 2) {                
                 countTwo++;
+                highsecondTwo = highTwo;
+                highTwo = i;
                 if (score < 2) {
                     score = 2;
                     scoreHigh = i;
-                    highTwo = i;
                 }
-                else if (score == 2 && i > scoreHigh) { scoreHigh = i; highTwo = i; }
+                else if (score == 2 && i > scoreHigh) { scoreHigh = i; }
                 // Two Pair
                 if (countTwo > 1 && score < 3) score = 3;
 
@@ -167,7 +190,7 @@ $(function() {
                     score = 6;
                     scoreHigh = tempHighCard;
                 } 
-                for (k=2;k<15;k++) {
+                for (k=2;k<11;k++) {
                     if (tempFreqArr[k] == 1 && tempFreqArr[k + 1] == 1 && tempFreqArr[k + 2] == 1 && tempFreqArr[k + 3] == 1 && tempFreqArr[k + 4] == 1) {
                         // Straight flush
                         if (score < 9) {
@@ -175,6 +198,13 @@ $(function() {
                             scoreHigh = tempFreqArr[k + 4];
                         }
                         else if (score == 9 && scoreHigh < tempFreqArr[k+4]) scoreHigh = tempFreqArr[k + 4];
+                    }
+                }
+                if (tempFreqArr[2] == 1 && tempFreqArr[3] == 1 && tempFreqArr[4] == 1 && tempFreqArr[5] == 1 && tempFreqArr[14] == 1) {
+                    // Straight flush, ace low
+                    if (score < 9) {
+                        score = 9;
+                        scoreHigh = 5;
                     }
                 }
             }
@@ -190,15 +220,77 @@ $(function() {
                 else if (score == 5 && i + 4 > scoreHigh) scoreHigh = i + 4;                
             }            
         }
-        if (freqArr[2] > 0 && freqArr[3] > 0 && freqArr[4] > 0 && freqArr[5] > 0 && freqArr[14] > 0) {                
+        if (freqArr[2] > 0 && freqArr[3] > 0 && freqArr[4] > 0 && freqArr[5] > 0 && freqArr[14] > 0) {   
+            // Straight, ace low             
             if (score < 5) {
                 score = 5;
                 scoreHigh = 5;
             }
             else if (score == 5 && 5 > scoreHigh) scoreHigh = 5;            
         }
+        
+        rscore = 0;
+        firstKicker = 0;
+        secondKicker = 0;
+        thirdKicker = 0;
+        // Calculate RScore; 11 digit ranking of hand. First digit is hand type. Next five pairs of digits are potential tie breaks
+        // In texas hold'em, only 5 of the 7 cards are used for hand scoring
+        if (score == 9) {
+            // Straight Flush: high card wins.
+            rscore = 90000000000 + scoreHigh;
+        }
+        else if (score == 8) {
+            // Four of a Kind: high card wins.
+            rscore = 80000000000 + scoreHigh;
+        }
+        else if (score == 7) {
+            // Full house: high triple wins, high pair wins.
+            rscore = 70000000000 + (highThree * 100) + highTwo;
+        }
+        else if (score == 6) {
+            // Flush: high card wins.
+            rscore = 60000000000 + scoreHigh;
+        }
+        else if (score == 5) {
+            // Straight: high card wins.
+            rscore = 50000000000 + scoreHigh;
+        }
+        else if (score == 4) {
+            // Three of a kind: high triple wins, high first kicker wins, high second kicker wins.
+            for (i=0;i<scoredHand.length;i++) {
+                if (scoredHand[i].number != scoreHigh) {
+                    secondKicker = firstKicker;
+                    firstKicker = scoredHand[i].number;
+                }
+            }
+            rscore = 40000000000 + (scoreHigh * 10000) + (firstKicker * 100) + secondKicker;
+        }
+        else if (score == 3) {
+            // Two pair: high pair wins, high second pair wins, high kicker wins.
+            for (i=0;i<scoredHand.length;i++) {
+                if (scoredHand[i].number != highTwo && scoredHand[i].number != highsecondTwo) {
+                    firstKicker = scoredHand[i].number;
+                }
+            }
+            rscore = 30000000000 + (highTwo * 10000) + (highsecondTwo * 100) + firstKicker;
+        }
+        else if (score == 2) {
+            // One pair: high pair wins, high non-tie kicker wins.
+            for (i=0;i<scoredHand.length;i++) {
+                if (scoredHand[i].number != scoreHigh) {
+                    thirdKicker = secondKicker;
+                    secondKicker = firstKicker;
+                    firstKicker = scoredHand[i].number;
+                }
+            }
+            rscore = 20000000000 + (scoreHigh * 1000000) + (firstKicker * 10000) + (secondKicker * 100) + thirdKicker;
+        }
+        else if (score == 1) {
+            // High card: high non-tie kicker wins.
+            rscore = 10000000000 + (scoredHand[6].number * 100000000) + (scoredHand[5].number * 1000000) + (scoredHand[4].number * 10000) + (scoredHand[3].number * 100) + scoredHand[2].number;
+        }        
 
-        return [score,scoreHigh];
+        return rscore;
     }
 
     // Functions responsible for visuals
@@ -268,19 +360,10 @@ $(function() {
             $('#compHand3Card1').attr("src","./media/cards/" + compHand3[0].suit + "/" + compHand3[0].number + ".png")
             $('#compHand3Card2').attr("src","./media/cards/" + compHand3[1].suit + "/" + compHand3[1].number + ".png")
 
-            //drawWinner();
-        }
+            $('#buttonDeal').css("display","none")
 
-        // Debug info
-        [scoreP, highP] = calcScore(playerHand);
-        [scoreC1, highC1] = calcScore(compHand1);
-        [scoreC2, highC2] = calcScore(compHand2);
-        [scoreC3, highC3] = calcScore(compHand3);        
-        $('#sort').html(
-            "DEBUG INFO<br>P High: " + highP + " - P Score: " + scoreP
-            + "<br>C1 High: " + highC1 + " - C1 Score: " + scoreC1
-            + "<br>C2 High: " + highC2 + " - C2 Score: " + scoreC2
-            + "<br>C3 High: " + highC3 + " - C3 Score: " + scoreC3)
+            drawWinner();
+        }
     }
     function hideCards() {
         // Flip revealed cards back to hidden
@@ -297,27 +380,14 @@ $(function() {
         $('#river').attr("src","./media/cardback.png")
     }
     function drawWinner() {
-        [scoreP, highP] = calcScore(playerHand);
-        [scoreC1, highC1] = calcScore(compHand1);
-        [scoreC2, highC2] = calcScore(compHand2);
-        [scoreC3, highC3] = calcScore(compHand3);
-        winners = [];
-        highs = [];
-        winMax = Math.max(scoreP, scoreC1, scoreC2, scoreC3);
-        if (scoreP == winMax) { winners.push("P"); highs.push(highP); }
-        if (scoreC1 = winMax) { winners.push("C1"); highs.push(highC1); }
-        if (scoreC2 = winMax) { winners.push("C2"); highs.push(highC2); }
-        if (scoreC3 = winMax) { winners.push("C3"); highs.push(highC3); }
+        scoreP = calcScore(playerHand);
+        scoreC1 = calcScore(compHand1);
+        scoreC2 = calcScore(compHand2);
+        scoreC3 = calcScore(compHand3);
+        scores = [{name:"PLAYER", score:scoreP}, {name:"COMPUTER 1", score:scoreC1}, {name:"COMPUTER 2", score:scoreC2}, {name:"COMPUTER 3", score:scoreC3}];
+        scores.sort(function(a,b) { return b.score - a.score });
 
-        while (winners.length > 1) {
-            if (highs[highs.length - 1] < highs[highs.length - 2]) {
-                winners.pop();
-                highs.pop();
-            }
-        }
-
-        $('#msg').html(winMax + " is the winning score.")        
-        
+        $('#msg').html(scores[0].name + " IS THE WINNER!") 
     }
 
     // Page load functions
@@ -327,5 +397,5 @@ $(function() {
     $(window).resize(drawTable);
     $("#buttonNew").on("click",newGame);
     $("#buttonDeal").on("click",playerDeal);
-    $("#buttonFold").on("click",playerFold);
+    $("#buttonMute").on("click",playerMute);
 });
