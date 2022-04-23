@@ -6,6 +6,18 @@
         <link href="css/slots.css" rel="stylesheet" type="text/css">
     </head>
     <body>
+        <audio id="spinAudio" loop>
+            <source src="media/zmikeslotspin.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="spinWinAudio">
+            <source src="media/zmikeslotwin.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="spinLoseAudio">
+            <source src="media/zmikeslotlose.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         <main class="grid-container">
             <header class="top">
                 <h1>Slots</h1>
@@ -19,17 +31,14 @@
                 </ul>                
             </nav>
             <article class="middle">
-                This is where you will play slots!
-                <hr>
-                <img src="../media/placeholder-slots.jpg" width="100%" height="auto">
-                <hr>
-                Depending on the machine, the player can insert cash or, in "ticket-in, ticket-out" machines, a paper ticket with a barcode, into a designated slot on the machine. The machine is then activated by means of a lever or button (either physical or on a touchscreen), which activates reels that spin and stop to rearrange the symbols. If a player matches a winning combination of symbols, the player earns credits based on the paytable.
-                <small><cite>Retrieved from https://en.wikipedia.org/wiki/Slot_machine on March 10, 2022</cite></small>
+                <canvas id="myCanvas" width="10" height="10" style="border:10px gold groove;">Your browser does not support the HTML5 canvas tag</canvas>
+                <input type="button" id="buttonSpin" value="SPIN">
             </article>
             <footer class="bottom">
                 <small>&copy; Michael McLaughlin 2022. - <a href='readme.txt'>Read me</a><br> 
                     No part of this site may be reproduced in whole or in part in any manner without the permission of the copyright owner.</small>                
             </footer>
+            <script src="js/slots.js"></script>
         </main>
     </body>
 </html>

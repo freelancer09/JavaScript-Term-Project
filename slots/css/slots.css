@@ -42,6 +42,7 @@ article {
     padding: 10px;
     background-color: rgba(210,2,2,0.8);
     font-size: 15pt;
+    text-align: center;
 }
 footer {
     border-radius: 5px;
@@ -49,6 +50,18 @@ footer {
     padding: 2px;
     background-color: #d20202;
     text-align: center;
+}
+input {
+    width: 200px;
+    height: 100px;
+    font-size: 30pt;
+    background-color: goldenrod;
+    color: red;
+    text-align: center;
+}
+input:hover {
+    background-color: aquamarine;
+    cursor: pointer;
 }
 
 /* Grid Classes */
