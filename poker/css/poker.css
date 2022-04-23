@@ -68,6 +68,17 @@ input {
 #community {
     position: absolute;  
 }
+#controls {
+    margin-top: 10px;
+    text-align: center;
+}
+#msg {
+    margin-top: 10px;    
+    color:red;
+    background-color: yellow;
+    text-align: center;
+    text-decoration: solid;
+}
 
 /* Grid Classes */
 .top { grid-area: t }
