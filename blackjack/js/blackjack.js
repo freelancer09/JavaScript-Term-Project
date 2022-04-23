@@ -1,6 +1,7 @@
 $(function() {
     const CARDWIDTH = 141;
     const CARDHEIGHT = 192;
+    bgMusic = false;
 
     // Functions responsible for handling the deck
 
@@ -64,6 +65,16 @@ $(function() {
                 dealerBust = true;
             }
             drawBoard();
+        }
+    }
+    function playerMute() {
+        if (bgMusic) {
+            document.getElementById("bgMusic").pause();
+            bgMusic = false;
+        }
+        else {
+            document.getElementById("bgMusic").play();
+            bgMusic = true;
         }
     }
     function calcScore(hand) {
@@ -178,10 +189,11 @@ $(function() {
     if (isNaN(sessionStorage.wins)) sessionStorage.wins = 0;
     if (isNaN(sessionStorage.losses)) sessionStorage.losses = 0;
     newHand();
-
+    
     // Button Event handlers
 
     $("#buttonNew").on("click",newHand);
     $("#buttonHit").on("click",playerHit);
     $("#buttonStand").on("click",playerStand);
+    $("#buttonMute").on("click",playerMute);
 });

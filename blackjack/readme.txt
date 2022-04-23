@@ -1,6 +1,7 @@
 NMC CIT 190 Final Project - Blackjack
 Spring 2022
-Created by Michael McLaughlin
+Programmed by: Michael McLaughlin
+Audio design by: Aaron Fader
 
 No part of this site may be reproduced in whole or in part in any manner without the permission of the copyright owner.
 

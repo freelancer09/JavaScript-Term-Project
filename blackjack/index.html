@@ -10,6 +10,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
+        <audio id="bgMusic" loop>
+            <source src="media/zmikeblackjack.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         <main class="grid-container">
             <header class="top">
                 <h1>Blackjack</h1>
@@ -33,6 +37,7 @@
                     <input id="buttonNew" type="button" value="New">
                     <input id="buttonHit" type="button" value="Hit">
                     <input id="buttonStand" type="button" value="Stand">
+                    <input id="buttonMute" type="button" value="Music">
                 </div>
             </article>
             <footer class="bottom">
