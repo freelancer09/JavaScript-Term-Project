@@ -10,6 +10,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
+        <audio id="bgMusic" loop>
+            <source src="media/zmikepoker.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         <main class="grid-container">
             <header class="top">
                 <h1>Poker</h1>
@@ -48,13 +52,12 @@
                         <img id="compHand3Card2" src="media/cardback.png" width="47" height="64"/>
                     </div>                 
                 </div>
-                <div>
+                <div id="msg"></div>
+                <div id="controls">
                     <input id="buttonNew" type="button" value="New Game">
                     <input id="buttonDeal" type="button" value="Next Card">
-                    <input id="buttonFold" type="button" value="Fold">
-                </div>
-                <div id="msg"></div>
-                <div id="sort"></div>      
+                    <input id="buttonMute" type="button" value="Music">
+                </div>      
             </article>
             <footer class="bottom">
                 <small>&copy; Michael McLaughlin 2022.  - <a href='readme.txt'>Read me</a><br> 
